@@ -1,15 +1,14 @@
 package neu.edu.team.ga.defination;
 
-import java.util.List;
-import java.util.Vector;
-
 public class Individual {
 
-	private Double[] genotype;
-	private List<Double[]> chromosome = new Vector<>();
+	private Integer[] genotype;
 	
 	public Individual() {}
-	public Individual(Double[] genotype) {
+	public Individual(Integer[] genotype) {
 		this.genotype = genotype;
+	}
+	public Integer[] getGenotype() {
+		return genotype;
 	}
 }

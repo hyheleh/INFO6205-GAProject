@@ -1,51 +1,35 @@
 package neu.edu.team.ga.util;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
 import java.util.Random;
-import java.util.Vector;
 
 public class GenoOperation {
 	
-	//read properties file to load predifined parameters
-	private static Properties prop = new Properties();
-	private static int genomeLength = Integer.valueOf(prop.getProperty("genomeLength"));
-	private static double maxValue = Double.valueOf(prop.getProperty("maxFloatValue"));
-	private static double minValue = Double.valueOf(prop.getProperty("minFloatValue"));
-	private static double mutationRange = Double.valueOf(prop.getProperty("mutationRange"));
-	static {
-		 InputStream in;
-		try {
-			in = new BufferedInputStream(new FileInputStream("config.properties"));
-			prop.load(in);
-		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	/**
 	 * method to get a new random genome
 	 * @return
 	 */
-	public static Double[] generateGenome() {
-		Double[] genome = new Double[genomeLength];
-		for(int i = 0; i < genomeLength; i++) {
-			genome[i] = (Math.random()-0.5)*(maxValue-minValue);
+	public static Integer[] generateGenome(int length) {
+		Integer[] genome = new Integer[length+1];
+		for(int i = 0; i < length; i++) {
+			genome[i] = i+1;
 		}
+		//randomly switch two value of the genome
+		for(int i = 0; i < length*2; i++) {
+			Random random = new Random();
+			shuffle(random.nextInt(length-1)+1, random.nextInt(length-1)+1, genome);
+		}
+		genome[length] = genome[0];//back to the start point
 		return genome;
 	}
 	
+
 	/**
 	 * get a 'reflection' of current genotype 
 	 * @param genotype
 	 * @return
 	 */
-	public static Double[] symmetry(Double[] genotype) {
-		for(Double d : genotype) d = maxValue - (d - minValue);
+	public static Integer[] symmetry(Integer[] genotype) {
+		for(Integer d : genotype) d = genotype.length - d;
 		return genotype;
 	}
 	/**
@@ -53,12 +37,9 @@ public class GenoOperation {
 	 * @param genotype
 	 * @return
 	 */
-	public static Double[] mutate(Double[] genotype) {
-		for(Double d : genotype) {
-			d+=((Math.random()-0.5)*mutationRange);
-			if(d > maxValue) d = maxValue;
-			if(d < minValue) d = minValue;
-		}
+	public static Integer[] mutate(Integer[] genotype) {
+		Random random = new Random();
+		shuffle(random.nextInt(genotype.length-2)+1, random.nextInt(genotype.length-2)+1, genotype);
 		return genotype;
 	}
 	/**
@@ -66,27 +47,49 @@ public class GenoOperation {
 	 * @param chromosome
 	 * @return
 	 */
-	public static List<Double[]> crossover(List<Double[]> chromosome){
+	public static Integer[] crossover(Integer[] g1, Integer[] g2){
+		Integer[] g = new Integer[g1.length];
+		for(int i = 0; i < g1.length; i++) g[i] = g1[i];
 		Random random = new Random();
-		int a = random.nextInt(genomeLength);
-		int b = random.nextInt(genomeLength);
-		if(a == b && a < genomeLength) b++;
-		if(a == b && a > 0) b--;
-		for(int i = (b<a?b:a); i < (a>b?a:b); i++) {
-			chromosome.get(0)[i] += Math.random()*(chromosome.get(1)[i]-chromosome.get(0)[i]);
-			chromosome.get(1)[i] -= Math.random()*(chromosome.get(1)[i]-chromosome.get(0)[i]);
+		int start = random.nextInt(g1.length - 2) + 1;
+		int end = random.nextInt(g1.length - 1 - start) + start + 1;
+		Integer[] sub = new Integer[end - start + 1];
+		for(int i = 0; i < end - start + 1; i++) {
+			sub[i] = g1[start+i];
 		}
-		return chromosome;
+		rearrange(g2, sub, start, end);
+		return g;
 	}
+
 	/**
 	 * code genotype to phenotype
 	 * @param genotype
 	 * @return
 	 */
-	public static Object coding(Double[] genotype, double start, double end) {
-		double avg = 0.0;
-		for(double d : genotype) avg+=d;
-		avg/=genomeLength;
-		return (avg-minValue)/(maxValue-minValue)*(end-start)+start;
+	public static double fitness(Integer[] genotype, Double[][] distances) {
+		double distance = 0d;
+		for(int i = 0; i < genotype.length-1; i++) {
+			distance += distances[genotype[i]-1][genotype[i+1]-1];
+		}
+		return 1.0/distance;
+	}
+	
+	private static void shuffle(int i, int j, Integer[] array) {
+		// TODO Auto-generated method stub
+		int key = array[i];
+		array[i] = array[j];
+		array[j] = key;
+	}
+	
+	private static void rearrange(Integer[] g2, Integer[] sub, int start, int end) {
+		// TODO Auto-generated method stub
+		for(int i = 0; i < g2.length-1; i++) {
+			for(int j = 0; j < sub.length; j++) {
+				if(g2[i] == sub[j] && i-start != j) {
+					shuffle(i, start+j, g2);
+					break;
+				}
+			}
+		}
 	}
 }
