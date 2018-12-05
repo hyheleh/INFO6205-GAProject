@@ -1,11 +1,11 @@
 package neu.edu.team.ga.defination;
 
-public class Individual {
+public class TSPIndividual {
 
 	private Integer[] genotype;
 	
-	public Individual() {}
-	public Individual(Integer[] genotype) {
+	public TSPIndividual() {}
+	public TSPIndividual(Integer[] genotype) {
 		this.genotype = genotype;
 	}
 	public Integer[] getGenotype() {

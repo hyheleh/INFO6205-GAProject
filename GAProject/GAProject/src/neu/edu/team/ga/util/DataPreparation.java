@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * This is random data used for TSP problem
+ * @author Huai Huang
+ *
+ */
 public class DataPreparation {
 
 	//read properties file to load predifined parameters
@@ -45,6 +50,7 @@ public class DataPreparation {
 			for(int j = i; j < citiesNum; j++) {
 				if(i == j) distances[i][j] = 0.0;
 				else {
+					//calculate the distance,also symmetric
 					distances[i][j] = Math.sqrt((cities[i][0]-cities[j][0])*(cities[i][0]-cities[j][0])
 							+(cities[i][1]-cities[j][1])*(cities[i][1]-cities[j][1]));
 					distances[j][i] = distances[i][j];

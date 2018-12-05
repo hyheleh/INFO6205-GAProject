@@ -3,18 +3,17 @@ package neu.edu.team.ga.defination;
 import java.util.ArrayList;
 import java.util.List;
 
-import neu.edu.team.ga.util.DataPreparation;
-import neu.edu.team.ga.util.GenoOperation;
+import neu.edu.team.ga.util.PolyGenoOperation;
 
-public class Population {
+public class PolyPopulation {
 
 	private int groupCapacity;
-	private List<TSPIndividual> indis = new ArrayList<>();
+	private List<PolyIndividual> indis = new ArrayList<>();
 	
-	public Population(int population) {
+	public PolyPopulation(int population) {
 		this.groupCapacity = population;
 		for(int i = 0; i < population; i++)			
-			indis.add(new TSPIndividual(GenoOperation.generateGenome(DataPreparation.getCitiesNum())));
+			indis.add(new PolyIndividual(PolyGenoOperation.generateGenome()));
 	}
 
 	public int getGroupCapacity() {
@@ -23,10 +22,10 @@ public class Population {
 	public void setGroupCapacity(int groupCapacity) {
 		this.groupCapacity = groupCapacity;
 	}
-	public List<TSPIndividual> getIndis(){
+	public List<PolyIndividual> getIndis(){
 		return indis;
 	}
-	public void setIndis(List<TSPIndividual> indis) {
+	public void setIndis(List<PolyIndividual> indis) {
 		this.indis = indis;
 	}
 }

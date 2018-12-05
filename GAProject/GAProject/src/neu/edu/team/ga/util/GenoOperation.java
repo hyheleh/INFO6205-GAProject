@@ -1,6 +1,11 @@
 package neu.edu.team.ga.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import neu.edu.team.ga.defination.TSPIndividual;
+import neu.edu.team.ga.defination.Population;
 
 public class GenoOperation {
 	
@@ -72,6 +77,33 @@ public class GenoOperation {
 			distance += distances[genotype[i]-1][genotype[i+1]-1];
 		}
 		return 1.0/distance;
+	}
+	
+	/**
+	 * selection operation for a certain generation
+	 * @param pop
+	 * @param fitList
+	 * @param totalFit
+	 */
+	public static List<Double> selection(Population pop, List<Double> fitList, double cutoff, double totalFit) {
+		int lastGenerationNum = pop.getGroupCapacity();
+		List<TSPIndividual> nextGeneration = new ArrayList<>();
+		List<Double> nextFitnesses = new ArrayList<>();
+		while(nextGeneration.size() < lastGenerationNum*cutoff) {			
+			double selectionVal = Math.random();
+			double accumulateVal = 0.0;
+			for(int i = 0; i < pop.getGroupCapacity(); i++) {
+				if(selectionVal >= accumulateVal && selectionVal < accumulateVal+fitList.get(i)/totalFit) {
+					nextGeneration.add(pop.getIndis().get(i));
+					nextFitnesses.add(fitList.get(i));
+					break;
+				}
+				accumulateVal+=(fitList.get(i)/totalFit);
+			}
+		}
+		pop.setIndis(nextGeneration);
+		pop.setGroupCapacity(nextGeneration.size());
+		return nextFitnesses;
 	}
 	
 	private static void shuffle(int i, int j, Integer[] array) {
