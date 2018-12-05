@@ -1,7 +1,10 @@
 package neu.edu.team.ga.generation;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -82,10 +85,18 @@ public class Generate {
 			for(int i = 0; i < fitnesses.size(); i++) {
 				if(fitnesses.get(i) > bestFit) {
 					bestFit = fitnesses.get(i);
-					result = pop.getIndis().get(i).getGenotype();
+					for(int j = 0; j < DataPreparation.getCitiesNum()+1; j++) {
+						result[j] = pop.getIndis().get(i).getGenotype()[j];
+					}
 				}
 			}
 			System.out.println(1/bestFit);
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File("resultTSP.csv"), true))){
+				bw.write(gen+","+(1/bestFit)+",\n");
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 			gen++;
 		}
 		return result;
