@@ -1,7 +1,10 @@
 package neu.edu.team.ga.generation;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -86,6 +89,12 @@ public class PolyGenerate {
 			}
 			System.out.println(largest);
 			System.out.println(Arrays.toString(result));
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File("resultPEP.csv"), true))){
+				bw.write(gen+","+largest+",\n");
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 			gen++;
 		}
 		return result;

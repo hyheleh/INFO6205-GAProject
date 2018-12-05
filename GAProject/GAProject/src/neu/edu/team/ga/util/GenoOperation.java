@@ -53,8 +53,8 @@ public class GenoOperation {
 	 * @return
 	 */
 	public static Integer[] crossover(Integer[] g1, Integer[] g2){
-		Integer[] g = new Integer[g1.length];
-		for(int i = 0; i < g1.length; i++) g[i] = g1[i];
+		Integer[] g = new Integer[g2.length];
+		for(int i = 0; i < g2.length; i++) g[i] = g2[i];
 		Random random = new Random();
 		int start = random.nextInt(g1.length - 2) + 1;
 		int end = random.nextInt(g1.length - 1 - start) + start + 1;
@@ -62,7 +62,7 @@ public class GenoOperation {
 		for(int i = 0; i < end - start + 1; i++) {
 			sub[i] = g1[start+i];
 		}
-		rearrange(g2, sub, start, end);
+		rearrange(g, sub, start, end);
 		return g;
 	}
 
@@ -113,12 +113,12 @@ public class GenoOperation {
 		array[j] = key;
 	}
 	
-	private static void rearrange(Integer[] g2, Integer[] sub, int start, int end) {
+	private static void rearrange(Integer[] g, Integer[] sub, int start, int end) {
 		// TODO Auto-generated method stub
-		for(int i = 0; i < g2.length-1; i++) {
+		for(int i = 0; i < g.length-1; i++) {
 			for(int j = 0; j < sub.length; j++) {
-				if(g2[i] == sub[j] && i-start != j) {
-					shuffle(i, start+j, g2);
+				if(g[i] == sub[j] && i-start != j) {
+					shuffle(i, start+j, g);
 					break;
 				}
 			}

@@ -60,7 +60,8 @@ public class PolyGenoOperation {
 		}
 		//calculate the value
 		double value = 0.0;
-		value = variables[0]*variables[0]+variables[1]*variables[1]+1;
+//		value = variables[0]*variables[0]+variables[1]*variables[1]+1;
+		value = variables[0]*variables[0]+variables[1]*variables[1]+variables[2]*variables[2]+variables[3]*variables[3]+1;
 //		for(int i = 0; i < variableNum; i++) value+=(parameters[i]*Math.pow(variables[i], pows[i]));
 		return value;
 	}
@@ -115,7 +116,12 @@ public class PolyGenoOperation {
 		int end = start + 1 + random.nextInt(variableNum-start);
 		//which one is better, why
 //		for(int i = start; i < end; i++) g1[i] = g2[i] + Math.random()*(g1[i]-g2[i]);
-		for(int i = start; i < end; i++) g1[i] = g2[i];
+//		for(int i = start; i < end; i++) g1[i] = g2[i];
+		for(int i = start; i < end; i++) {
+			g1[i] = g2[i] + (Math.random()*1.4-0.2)*(g1[i]-g2[i]);
+			if(g1[i] > maxValue) g1[i] = maxValue;
+			if(g1[i] < minValue) g1[i] = minValue;
+		}
 		return g1;
 	}
 	
