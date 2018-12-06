@@ -11,4 +11,7 @@ public class PolyIndividual {
 	public Double[] getGenotype() {
 		return genotype;
 	}
+	public void setGenotype(Double[] genotype) {
+		this.genotype = genotype;
+	}
 }

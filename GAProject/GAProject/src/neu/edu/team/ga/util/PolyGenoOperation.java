@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -61,8 +62,8 @@ public class PolyGenoOperation {
 		//calculate the value
 		double value = 0.0;
 //		value = variables[0]*variables[0]+variables[1]*variables[1]+1;
-		value = variables[0]*variables[0]+variables[1]*variables[1]+variables[2]*variables[2]+variables[3]*variables[3]+1;
-//		for(int i = 0; i < variableNum; i++) value+=(parameters[i]*Math.pow(variables[i], pows[i]));
+//		value = variables[0]*variables[0]+variables[1]*variables[1]+variables[2]*variables[2]+variables[3]*variables[3]+1;
+		for(int i = 0; i < variableNum; i++) value+=(parameters[i]*Math.pow(variables[i], pows[i]));
 		return value;
 	}
 	
@@ -83,12 +84,17 @@ public class PolyGenoOperation {
 	
 
 	/**
-	 * get a 'reflection' of current genotype 
+	 * a special condition of mutation. Some value turns to its reflection
 	 * @param genotype
 	 * @return
 	 */
 	public static Double[] symmetry(Double[] genotype) {
-		for(Double d : genotype) d = maxValue - (d - minValue);
+		Random random = new Random();
+		int times = random.nextInt(variableNum/2);
+		for(int i = 0; i < times; i++) {
+			double d = genotype[random.nextInt(variableNum)];
+			genotype[random.nextInt(variableNum)] = maxValue - (d - minValue);
+		}
 		return genotype;
 	}
 	/**
@@ -118,11 +124,11 @@ public class PolyGenoOperation {
 //		for(int i = start; i < end; i++) g1[i] = g2[i] + Math.random()*(g1[i]-g2[i]);
 //		for(int i = start; i < end; i++) g1[i] = g2[i];
 		for(int i = start; i < end; i++) {
-			g1[i] = g2[i] + (Math.random()*1.4-0.2)*(g1[i]-g2[i]);
+			g1[i] = g2[i] + (Math.random()*2-1)*(g1[i]-g2[i]);
 			if(g1[i] > maxValue) g1[i] = maxValue;
 			if(g1[i] < minValue) g1[i] = minValue;
 		}
-		return g1;
+		return Arrays.copyOf(g1, g1.length);
 	}
 	
 	/**

@@ -11,4 +11,7 @@ public class TSPIndividual {
 	public Integer[] getGenotype() {
 		return genotype;
 	}
+	public void setGenotype(Integer[] genotype) {
+		this.genotype = genotype;
+	}
 }

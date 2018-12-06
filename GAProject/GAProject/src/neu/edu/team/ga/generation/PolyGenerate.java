@@ -33,6 +33,8 @@ public class PolyGenerate {
 	}
 	private static final double crossoverProbability = Double.valueOf(prop.getProperty("crossoverProbability"));
 	private static final double mutationProbability = Double.valueOf(prop.getProperty("mutationProbability"));
+	private static final double symmetryProbability = Double.valueOf(prop.getProperty("symmetryProbability"));
+	private static final double threshold = Double.valueOf(prop.getProperty("threshold"));
 	private static final double cutoff = Double.valueOf(prop.getProperty("cutoff"));
 	private static final int population = Integer.valueOf(prop.getProperty("initialPopulation"));
 	private static final int variableNum = Integer.valueOf(prop.getProperty("variableNum"));
@@ -73,10 +75,13 @@ public class PolyGenerate {
 						pop.setGroupCapacity(pop.getGroupCapacity()+1);
 					}
 				}
+				//this is useful to solve polynomial problems
+				if(Math.random() <= symmetryProbability) PolyGenoOperation.symmetry(ind.getGenotype());
 			}
 			System.out.println(pop.getGroupCapacity());
-			//selection
-			valueList = PolyGenoOperation.selection(pop, cutoff);
+			//selection, to avoid elimination, set a threshold
+			if(pop.getGroupCapacity() >= threshold*population) valueList = PolyGenoOperation.selection(pop, cutoff);
+			else {continue;}
 			//output the largest value now
 			//the largest value will be the value of 'largest' after the last generation
 			for(int i = 0; i < pop.getGroupCapacity(); i++) {
@@ -87,8 +92,8 @@ public class PolyGenerate {
 					}
 				}
 			}
-			System.out.println(largest);
-			System.out.println(Arrays.toString(result));
+//			System.out.println(largest);
+//			System.out.println(Arrays.toString(result));
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File("resultPEP.csv"), true))){
 				bw.write(gen+","+largest+",\n");
 			}catch (Exception e) {
